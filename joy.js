@@ -45,13 +45,21 @@
  * SOFTWARE.
  */
 
+const JoyStickEventType = {
+    None : 0,
+    Press : 1,
+    PressMove : 2,
+    Release: 3
+}
+
 let StickStatus =
 {
     xPosition: 0,
     yPosition: 0,
     x: 0,
     y: 0,
-    cardinalDirection: "C"
+    cardinalDirection: "C",
+    eventType:JoyStickEventType.None
 };
 
 /**
@@ -178,6 +186,14 @@ var JoyStick = (function(container, parameters, callback)
     function onTouchStart(event) 
     {
         pressed = 1;
+
+        StickStatus.xPosition = 0;
+        StickStatus.yPosition = 0;
+        StickStatus.x = 0;
+        StickStatus.y = 0;
+        StickStatus.cardinalDirection = getCardinalDirection();
+        StickStatus.eventType = JoyStickEventType.Press;
+        callback(StickStatus);
     }
 
     function onTouchMove(event)
@@ -209,6 +225,7 @@ var JoyStick = (function(container, parameters, callback)
             StickStatus.x = (100*((movedX - centerX)/maxMoveStick)).toFixed();
             StickStatus.y = ((100*((movedY - centerY)/maxMoveStick))*-1).toFixed();
             StickStatus.cardinalDirection = getCardinalDirection();
+            StickStatus.eventType = JoyStickEventType.PressMove;
             callback(StickStatus);
         }
     } 
@@ -234,6 +251,7 @@ var JoyStick = (function(container, parameters, callback)
         StickStatus.x = (100*((movedX - centerX)/maxMoveStick)).toFixed();
         StickStatus.y = ((100*((movedY - centerY)/maxMoveStick))*-1).toFixed();
         StickStatus.cardinalDirection = getCardinalDirection();
+        StickStatus.eventType = JoyStickEventType.Release;
         callback(StickStatus);
     }
 
@@ -243,6 +261,14 @@ var JoyStick = (function(container, parameters, callback)
     function onMouseDown(event) 
     {
         pressed = 1;
+
+        StickStatus.xPosition = 0;
+        StickStatus.yPosition = 0;
+        StickStatus.x = 0;
+        StickStatus.y = 0;
+        StickStatus.cardinalDirection = getCardinalDirection();
+        StickStatus.eventType = JoyStickEventType.Press;
+        callback(StickStatus);
     }
 
     /* To simplify this code there was a new experimental feature here: https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/offsetX , but it present only in Mouse case not metod presents in Touch case :-( */
@@ -275,6 +301,7 @@ var JoyStick = (function(container, parameters, callback)
             StickStatus.x = (100*((movedX - centerX)/maxMoveStick)).toFixed();
             StickStatus.y = ((100*((movedY - centerY)/maxMoveStick))*-1).toFixed();
             StickStatus.cardinalDirection = getCardinalDirection();
+            StickStatus.eventType = JoyStickEventType.PressMove;
             callback(StickStatus);
         }
     }
@@ -300,6 +327,7 @@ var JoyStick = (function(container, parameters, callback)
         StickStatus.x = (100*((movedX - centerX)/maxMoveStick)).toFixed();
         StickStatus.y = ((100*((movedY - centerY)/maxMoveStick))*-1).toFixed();
         StickStatus.cardinalDirection = getCardinalDirection();
+        StickStatus.eventType = JoyStickEventType.Release;
         callback(StickStatus);
     }
 
